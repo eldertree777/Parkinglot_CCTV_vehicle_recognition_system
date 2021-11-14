@@ -2,6 +2,8 @@ from typing import Optional
 from yolo import vehicle_recognition
 from fastapi import FastAPI
 import os
+from datetime import datetime
+
 
 app = FastAPI()
 model = vehicle_recognition()
@@ -31,6 +33,16 @@ def read_item(item_id: int, q: Optional[str] = None):
     value = model.howManyCar()
     return {"item_id": item_id, "q": value}
 
+#get_car
+@app.get("/howManyCar/")
+def read_item():
+    current_time = datetime.now()
+    model.setImgPath('parkingLot16.PNG')
+    model.makeModel()
+    value = model.howManyCar()
+    date = current_time.strftime("%Y-%m-%d-%H")
+    return {"TIME": date, "LOC" : "NICO-1", "space": 40, "car" : value , "bus" : 0, "truck" : 2, "lastmile" : 0}
+
 
 # @app.get("/items/{imgPath}")
 # def read_item(imgPath: str):
@@ -40,3 +52,4 @@ def read_item(item_id: int, q: Optional[str] = None):
 #     return {"car_number": value}
 
 # uvicorn main:app --reload
+
